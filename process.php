@@ -1,0 +1,88 @@
+<?php
+    // session_start();
+    // $mysqli = new mysqli('localhost', 'root', '', 'crud') or die(mysqli_error($mysqli));
+
+    // $update = false;
+    // $name = '';
+    // $location = '';
+
+    // if(isset($_POST['save'])) {
+    //     $name = $_POST['name'];
+    //     $location = $_POST['location'];
+
+    //     $mysqli->query("INSERT INTO data (name, location) VALUES ('$name', '$location')") or die($mysqli->error);
+
+    //     $_SESSION['message'] = "Record has been saved";
+    //     $_SESSION['msg_type'] = "success";
+    //     header("location: practice.php");
+    // }
+
+    // if(isset($_GET['delete'])) {
+    //     $id = $_GET['delete'];
+    //     $mysqli->query("DELETE FROM data WHERE id=$id") or die($mysqli->error());
+
+    //     $_SESSION['message'] = "Record has been deleted!";
+    //     $_SESSION['msg_type'] = "danger";
+
+    //     header("location: practice.php");
+    // }
+
+    // if(isset($_GET['edit'])) {
+    //     $id = $_GET['edit'];
+    //     $update = true;
+    //     $result = $mysqli->query("SELECT * FROM data WHERE id=$id") or die($mysqli->error());
+    //     if (count(array($result))) {
+    //         $row = $result->fetch_array();
+    //         $name = $row['name'];
+    //         $location = $row['location'];
+    //     }
+    // }
+
+session_start();
+$mysqli = new mysqli('localhost','root','','crud') or die(mysqli_error($mysqli));
+
+$id = 0;
+$update = false;
+$name='';
+$location='';
+//save button
+if(isset($_POST['save'])){//if we click the button we want to send the data to the database
+    $name=$_POST['name'];
+    $location =$_POST['location'];
+    $mysqli->query("INSERT INTO data (name,location) VALUES('$name','$location')") or
+    die($mysqli->error); 
+    $_SESSION['message']="Record has been saved!";
+    $_SESSION['msg_type']="success";
+    header("location:crud.php");
+}
+//delete button
+if(isset($_GET['delete'])){
+    $id=$_GET['delete'];
+    $mysqli->query("DELETE FROM data WHERE id=$id") or die($mysqli->error); 
+    $_SESSION['message']="Record has been deletd!";
+    $_SESSION['msg_type']="danger";
+    header("location:crud.php");
+}
+if(isset($_GET['edit'])){
+    $id=$_GET['edit'];
+    $update = true;
+    $result=$mysqli->query("SELECT * FROM data WHERE id=$id") or die($mysqli->erorr);
+    if(count(array($result))){
+        $row=$result->fetch_array();
+        $name=$row['name'];
+        $location=$row['location'];   
+    }
+    // print_r($result);
+}
+if(isset($_POST['update'])) {
+    $id = $_POST['id'];
+    $name = $_POST['name'];
+    $location = $_POST['location'];
+
+    $mysqli->query("UPDATE data SET name='$name', location='$location' WHERE id=$id") or die($mysqli->error);
+    $_SESSION['message'] = "Record has been updated!";
+    $_SESSION['msg_type'] = "warning";
+    header("location:crud.php");
+}
+
+?>
